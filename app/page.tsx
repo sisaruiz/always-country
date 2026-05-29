@@ -1,9 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRef, useEffect} from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useEffect } from "react";
 import Lenis from "lenis";
 
 export default function Home() {
@@ -27,26 +25,16 @@ export default function Home() {
   }, []);
 
   const images = [
-    "/images/gallery-1.jpeg",
-    "/images/gallery-2.jpeg",
-    "/images/gallery-3.jpeg",
-    "/images/gallery-4.jpeg",
-    "/images/gallery-5.jpeg",
+    { src: "/images/gallery-1.jpeg", type: "landscape" },
+    { src: "/images/gallery-2.jpeg", type: "portrait" },
+    { src: "/images/gallery-3.jpeg", type: "landscape" },
+    { src: "/images/gallery-4.jpeg", type: "landscape" },
+    { src: "/images/gallery-5.jpeg", type: "landscape" },
+    { src: "/images/gallery-6.jpeg", type: "portrait" },
+    { src: "/images/gallery-7.jpeg", type: "landscape" },
+    { src: "/images/gallery-8.jpeg", type: "portrait" },
+    { src: "/images/gallery-9.jpeg", type: "landscape" }
   ];
-
-  const [current, setCurrent] = useState(0);
-
-  const prevImage = () => {
-    setCurrent((prev) => (prev - 1 + images.length) % images.length);
-  };
-
-  const nextImage = () => {
-    setCurrent((prev) => (prev + 1) % images.length);
-  };
-
-  const getImage = (offset: number) => {
-    return images[(current + offset + images.length) % images.length];
-  };
 
   const heroRef = useRef(null);
 
@@ -139,14 +127,14 @@ export default function Home() {
           </div>
 
           <h2 className="w-full font-serif text-4xl leading-tight text-[#2a2118] [text-indent:20%] md:text-6xl">
-            Always Country è una piccola impresa familiare specializzata nella vendita di
+            Always Country è una piccola impresa specializzata nella vendita di
             articoli country e western.
           </h2>
 
           <div className="mt-16 grid gap-12 md:grid-cols-2">
             <div className="space-y-8 font-serif text-lg leading-relaxed text-[#4b4035] md:text-xl">
               <p>
-                Da quasi vent'anni portiamo il nostro stand nei principali eventi country italiani
+                Portiamo il nostro stand nei principali eventi country italiani
                  e in numerose manifestazioni europee. Nel tempo abbiamo costruito un'attività basata
                   sulla qualità dei prodotti, sulla conoscenza del settore e sul rapporto diretto con i clienti.
               </p>
@@ -189,9 +177,8 @@ export default function Home() {
         id="gallery"
         className="bg-[#f4f0e8] px-6 py-24 md:px-16 md:py-32"
       >
-        <div className="mx-auto max-w-6xl">
-
-          <div className="mb-6 flex items-center gap-6">
+        <div className="mx-auto max-w-[1500px]">
+          <div className="mb-10 flex items-center gap-6">
             <div className="h-px w-12 bg-[#c89a4b]" />
 
             <p className="font-serif text-lg text-[#c89a4b]">
@@ -199,59 +186,22 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="relative mx-auto flex h-[420px] max-w-4xl items-center justify-center">
-            {/* immagini laterali sinistra */}
-            <img
-              src={getImage(-2)}
-              alt="Gallery laterale sinistra"
-              className="absolute left-0 z-10 h-64 w-48 -rotate-6 rounded-sm border-8 border-white object-cover shadow-xl"
-            />
-
-            <img
-              src={getImage(-1)}
-              alt="Gallery laterale sinistra"
-              className="absolute left-24 z-20 h-72 w-56 -rotate-3 rounded-sm border-8 border-white object-cover shadow-xl"
-            />
-
-            {/* immagini laterali destra */}
-            <img
-              src={getImage(1)}
-              alt="Gallery laterale destra"
-              className="absolute right-24 z-20 h-72 w-56 rotate-3 rounded-sm border-8 border-white object-cover shadow-xl"
-            />
-
-            <img
-              src={getImage(2)}
-              alt="Gallery laterale destra"
-              className="absolute right-0 z-10 h-64 w-48 rotate-6 rounded-sm border-8 border-white object-cover shadow-xl"
-            />
-
-            {/* freccia sinistra */}
-            <button
-              type="button"
-              onClick={prevImage}
-              className="absolute -left-16 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-white/90 text-[#2a2118] shadow-xl transition hover:scale-110"
-            >
-              <ChevronLeft size={30} />
-            </button>
-
-            {/* freccia destra */}
-            <button
-              type="button"
-              onClick={nextImage}
-              className="absolute -right-16 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-white/90 text-[#2a2118] shadow-xl transition hover:scale-110"
-            >
-              <ChevronRight size={30} />
-            </button>
-
-            {/* immagine centrale */}
-            <div className="relative z-30 bg-white p-4 shadow-2xl">
+          <div className="columns-1 gap-8 sm:columns-2 lg:columns-3">
+            {images.map((image, index) => (
               <img
-                src={getImage(0)}
-                alt="Gallery principale"
-                className="h-80 w-[520px] object-cover"
+                key={image.src}
+                src={image.src}
+                alt={`Gallery ${index + 1}`}
+                className={`
+                  mb-8 break-inside-avoid rounded-lg shadow-xl
+                  ${
+                    image.type === "portrait"
+                      ? "w-[82%] mx-auto"
+                      : "w-full"
+                  }
+                `}
               />
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -261,24 +211,34 @@ export default function Home() {
         id="contatti"
         className="bg-[#e8dfcf] px-6 py-24 md:px-16 md:py-32"
       >
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto grid max-w-6xl gap-16 md:grid-cols-2 md:items-center">
 
-          <div className="mb-6 flex items-center gap-6">
-            <div className="h-px w-12 bg-[#c89a4b]" />
+          <div>
+            <div className="mb-6 flex items-center gap-6">
+              <div className="h-px w-12 bg-[#c89a4b]" />
 
-            <p className="font-serif text-lg text-[#c89a4b]">
-              Contatti
-            </p>
+              <p className="font-serif text-lg text-[#c89a4b]">
+                Contatti
+              </p>
+            </div>
+
+            <h2 className="max-w-4xl font-serif text-4xl leading-tight text-[#2a2118] md:text-6xl">
+              Vuoi trovarci o contattarci?
+            </h2>
+
+            <div className="mt-10 space-y-3 font-serif text-lg text-[#4b4035] md:text-xl">
+              <p>Email: alwayscountry.info@gmail.com</p>
+              <p>Telefono: +39 351 669 2942</p>
+              <p>P.IVA: 02556860506</p>
+            </div>
           </div>
 
-          <h2 className="max-w-4xl font-serif text-4xl leading-tight text-[#2a2118] md:text-6xl">
-            Vuoi trovarci o contattarci?
-          </h2>
-
-          <div className="mt-10 space-y-3 font-serif text-lg text-[#4b4035] md:text-xl">
-            <p>Email: alwayscountry.info@gmail.com</p>
-            <p>Telefono: +39 351 669 2942</p>
-            <p>P.IVA: 02556860506</p>
+          <div className="flex justify-center md:justify-end">
+            <img
+              src="/images/Logo png transparent.png"
+              alt="Always Country"
+              className="h-64 w-auto opacity-90"
+            />
           </div>
         </div>
       </section>
